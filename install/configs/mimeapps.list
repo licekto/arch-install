@@ -1,0 +1,14 @@
+[Default Applications]
+image/jpeg=gpicview.desktop
+image/png=gpicview.desktop
+application/pdf=xpdf.desktop
+x-scheme-handler/http=xfce4-web-browser.desktop
+x-scheme-handler/https=xfce4-web-browser.desktop
+
+[Added Associations]
+image/jpeg=gpicview.desktop;
+image/png=gpicview.desktop;
+application/pdf=xpdf.desktop;
+x-scheme-handler/http=xfce4-web-browser.desktop;
+x-scheme-handler/https=xfce4-web-browser.desktop;
+
