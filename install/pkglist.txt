@@ -5,10 +5,12 @@ blueman
 bluez
 bluez-utils
 ccache
+cmake
 dhclient
 docker
 galculator
 gcc
+gdb
 git
 git-filter-repo
 glances
