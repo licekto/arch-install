@@ -86,6 +86,7 @@ custom_kernel()
     LINUX_PKG="https://archive.archlinux.org/packages/l/linux/linux-$VERSION-x86_64.pkg.tar.zst"
     LINUX_HEADERS_PKG="https://archive.archlinux.org/packages/l/linux-headers/linux-headers-$VERSION-x86_64.pkg.tar.zst"
     pacman -U --noconfirm $LINUX_PKG $LINUX_HEADERS_PKG
+    # IgnorePkg   = linux linux-api-headers linux-headers linux-firmware
 }
 
 configure()
