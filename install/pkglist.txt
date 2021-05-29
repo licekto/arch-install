@@ -17,6 +17,7 @@ glances
 go
 gpicview
 htop
+kolourpaint
 libcanberra
 libcanberra-pulse
 liferea
