@@ -1,6 +1,7 @@
 arc-gtk-theme
 bash-completion
 bat
+bleachbit
 blueman
 bluez
 bluez-utils
