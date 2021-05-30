@@ -64,7 +64,7 @@ install_yay()
     chown -R $USER_NAME /opt/yay-git
     cd /opt/yay-git
     sudo -u $USER_NAME makepkg --noconfirm --syncdeps --install --clean --check
-    sudo -u $USER_NAME yay -S --noconfirm --answerdiff=None brave-bin sublime-text-3
+    sudo -u $USER_NAME yay -S --noconfirm --answerdiff=None brave-bin # sublime-text-3
 }
 
 packages_conf()
