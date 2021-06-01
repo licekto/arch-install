@@ -5,6 +5,7 @@ ISO_DIR="$TMP_DIR/archlive"
 WORKD_DIR="$TMP_DIR/workdir"
 INSTALL_DIR="$ISO_DIR/airootfs/install"
 OUT_DIR=$(pwd)
+KEY_PATH="/home/tomas"
 
 if [[ $# -eq 1 ]];
 then
@@ -33,7 +34,7 @@ prepare_dirs()
 get_key()
 {
 	echo "Copying private key to the image to access github repositories..."
-	PUB_KEY=$(ls ~/.ssh/*.pub)
+	PUB_KEY=$(ls $KEY_PATH/.ssh/*.pub)
 	PRIV_KEY=${PUB_KEY%.pub}
 	mkdir $INSTALL_DIR/key
 	cp $PUB_KEY $INSTALL_DIR/key
