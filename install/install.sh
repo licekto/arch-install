@@ -15,9 +15,17 @@ efi_test() {
 set_mkinitcpio()
 {
     CONF_PATH="/etc/mkinitcpio.conf"
-    sed -i -E "s/^HOOKS=.*/HOOKS=(base udev autodetect keyboard keymap consolefont modconf block filesystems fsck)/g" $CONF_PATH
+    sed -i -E "s/^HOOKS=.*/HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt filesystems fsck)/g" $CONF_PATH
     grep "^HOOKS" $CONF_PATH
     mkinitcpio -P > /dev/null 2>&1
+}
+
+fix_flickering()
+{
+    # https://wiki.archlinux.org/index.php/intel_graphics#Screen_flickering
+    UUID=$(lsblk -f | grep $LINUX_DEV | awk '{ print $5 }')
+    sed -i -E "s/(GRUB_CMDLINE_LINUX=\")/\1cryptdevice=UUID=$UUID:cryptroot root=\/dev\/mapper\/cryptroot i915.enable_psr=0/g" /etc/default/grub
+    grep "GRUB_CMDLINE_LINUX=" /etc/default/grub
 }
 
 basic_conf()
@@ -36,6 +44,8 @@ basic_conf()
     #set_mkinitcpio
 
     mount /dev/sda1 /boot
+    # TODO: Test the following line
+    #grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/mnt/boot --recheck
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 

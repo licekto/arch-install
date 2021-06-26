@@ -11,7 +11,7 @@ SWAP_PARTITION_SIZE="1GiB"
 LINUX_PARTITION_SIZE="0"
 CRYPTROOT_PWD="root"
 
-LOG_FILE="bootstrap.log"
+LOG_FILE="partitions.log"
 
 # https://linux.die.net/man/8/sgdisk
 new_part() {
@@ -76,45 +76,4 @@ setup_partitions()
     echo "New partitions:"
     echo "---------------"
     parted -l
-}
-#>> $LOG_FILE 2>&1
-
-echo "Bootstrapping the base system..."
-{
-
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode grub efibootmgr os-prober openssh vim parted
-
-echo "Generating fstab"
-genfstab -U /mnt >> /mnt/etc/fstab
-
-sed -i '/swap/d' /mnt/etc/fstab
-echo "/dev/mapper/cryptswap		none 		swap 		sw 		0 0" >> /mnt/etc/fstab
-
-SWAP_SETTINGS=$(grep swap /mnt/etc/crypttab | awk '{ print $5 }')
-echo "cryptswap		/dev/disk/by-partlabel/cryptswap 	/dev/urandom $SWAP_SETTINGS" >> /mnt/etc/crypttab
-
-INSTALL_SCRIPT="install.sh"
-echo "Downloading $INSTALL_SCRIPT..."
-curl -o $INSTALL_SCRIPT https://raw.githubusercontent.com/licekto/arch-install/master/$INSTALL_SCRIPT
-
-chmod +x $INSTALL_SCRIPT
-cp $INSTALL_SCRIPT /mnt
-echo "Chrooting to the new system..."
 } >> $LOG_FILE 2>&1
-
-echo "The base system has been successfully bootstrapped. Configuring the system..."
-arch-chroot /mnt ./$INSTALL_SCRIPT
-
-{
-rm /mnt/$INSTALL_SCRIPT
-mv /mnt/install.log .
-
-umount /mnt/boot
-umount /mnt
-
-cryptsetup close /dev/mapper/cryptroot
-swapoff /dev/mapper/cryptswap
-cryptsetup close /dev/mapper/cryptswap
-} >> $LOG_FILE 2>&1
-
-echo "The base system has been successfully installed."

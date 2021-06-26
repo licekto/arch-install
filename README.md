@@ -9,6 +9,11 @@ Arch Linux install script
 4. Create install medium (USB) and boot from it
 5. Run the `bootstrap.sh` script
 
+# TODO
+
+* Test encrypted installation.
+* Generate and save installation image artefact.
+
 # Sources
 https://wiki.archlinux.org/index.php/installation_guide
 
