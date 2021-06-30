@@ -1,5 +1,6 @@
 arc-gtk-theme
 bash-completion
+bashtop
 bat
 bleachbit
 blueman
@@ -9,6 +10,7 @@ ccache
 cmake
 dhclient
 docker
+firefox
 galculator
 gcc
 gdb
