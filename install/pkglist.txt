@@ -54,6 +54,7 @@ tk
 ttf-dejavu
 ttf-droid
 ttf-liberation
+unrar
 usbutils
 valgrind
 vim
