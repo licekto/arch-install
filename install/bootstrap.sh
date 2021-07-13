@@ -8,12 +8,12 @@ LOG_FILE="bootstrap.log"
 
 encrypt_part()
 {
-    BLOCK_SIZE=$(cat /sys/class/block/$DEV/queue/physical_block_size)
+    BLOCK_SIZE=$(cat /sys/class/block/$DEVICE/queue/physical_block_size)
     TOTAL_SIZE=$(lsblk --output SIZE -n -d $LINUX_DEV | sed 's/^ *//g')
     RANDOM_DEVICE="/dev/random"
     
+    printf "y\n" | mkfs.ext4 $LINUX_DEV
     e2label $LINUX_DEV cryptroot
-    e2label $SWAP_DEV cryptswap
 
     echo "Overwriting the disk with random data ($RANDOM_DEVICE). It may take some time..."
     dd if=$RANDOM_DEVICE of=$LINUX_DEV bs=$BLOCK_SIZE status=progress
@@ -27,7 +27,7 @@ encrypt_part()
     mkfs.ext4 /dev/mapper/cryptroot
     mount /dev/mapper/cryptroot /mnt
 
-    cryptsetup open --type plain --key-file /dev/urandom $SWAP_DEV cryptswap
+    printf "YES" | cryptsetup open --type plain --key-file /dev/urandom $SWAP_DEV cryptswap
     mkswap -L cryptswap /dev/mapper/cryptswap
     swapon -L cryptswap
 }
@@ -42,22 +42,30 @@ close_encrypt()
     cryptsetup close /dev/mapper/cryptswap
 }
 
-bootstrap()
+prepare_non_crypt()
 {
     printf "y\n" | mkfs.ext4 $LINUX_DEV
     e2label $LINUX_DEV Arch
     mount $LINUX_DEV /mnt
+    mkswap $SWAP_DEV
     swapon $SWAP_DEV
-    mount /dev/sda1 /mnt/boot
+}
 
+bootstrap()
+{
     pacstrap -G -M /mnt base base-devel linux linux-firmware intel-ucode grub efibootmgr os-prober openssh vim
     genfstab -U /mnt >> /mnt/etc/fstab
 
     cp -r /install /mnt
+    chmod +x /mnt/install/install.sh
 }
 
 echo "Testing internet connection..."
 ping archlinux.org -c1 > ping.log 2>&1
+
+echo "Preparing encrypted partitions..."
+encrypt_part
+
 echo "Bootstrapping the base system. It may take several minutes..."
 bootstrap >> $LOG_FILE 2>&1
 echo "The base system has been successfully bootstrapped. Configuring the system..."
@@ -68,6 +76,6 @@ mkdir /mnt/$HOME_DIR/install-logs
 mv /mnt/install/*.log /mnt/$HOME_DIR/install-logs
 
 rm -rf /mnt/install
-umount -R /mnt
+close_encrypt
 
 echo "The base system has been successfully installed. Ready for reboot..."

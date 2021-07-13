@@ -44,8 +44,8 @@ basic_conf()
     #set_mkinitcpio
 
     mount /dev/sda1 /boot
-    # TODO: Test the following line
-    #grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/mnt/boot --recheck
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
+    grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot --recheck
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 
