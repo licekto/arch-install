@@ -80,13 +80,6 @@ bootstrap >> $LOG_FILE 2>&1
 echo "The base system has been successfully bootstrapped. Configuring the system..."
 arch-chroot /mnt /install/install.sh
 
-mkdir /mnt/$HOME_DIR/install-logs
-mv /mnt/install/*.log /mnt/$HOME_DIR/install-logs
-
-mkdir /mnt/$HOME_DIR/postinstall
-mv /mnt/install/configs /mnt/$HOME_DIR/postinstall
-mv /mnt/install/postinstall.sh /mnt/$HOME_DIR/postinstall
-
 rm -rf /mnt/install
 close_encrypt >> $LOG_FILE 2>&1
 

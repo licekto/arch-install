@@ -183,6 +183,19 @@ set_rcs()
     rm -rf $TMP_CONF_DIR
 }
 
+copy_files()
+{
+    mkdir $HOME_DIR/install-logs
+    mv /install/*.log $HOME_DIR/install-logs
+    
+    mkdir $HOME_DIR/postinstall
+    mv install/configs $HOME_DIR/postinstall
+    mv install/postinstall.sh $HOME_DIR/postinstall
+    
+    chown -R $USER_NAME $HOME_DIR/install-logs
+    chown -R $USER_NAME $HOME_DIR/postinstall
+}
+
 touch $LOG_FILE
 
 echo "Configuring the base system..."
@@ -210,6 +223,7 @@ echo "Setting up home directory..."
 setup_home >> $LOG_FILE 2>&1
 
 clean_root_keys >> $LOG_FILE 2>&1
+copy_files >> $LOG_FILE 2>&1
 
 echo "Packages has been successfully installed."
 exit
