@@ -22,7 +22,7 @@ encrypt_part()
 
     mkfs.ext4 /dev/mapper/cryptroot
     mount /dev/mapper/cryptroot /mnt
-    mkfs.ext4 -L cryptswap $SWAP_DEV 1M
+    mkfs.ext2 -L cryptswap $SWAP_DEV 1M
 }
 
 cleanup_boot()
@@ -60,7 +60,8 @@ bootstrap()
 
     sed -i '/swap/d' /mnt/etc/fstab
     echo "/dev/mapper/swap		none		swap		sw		0 0" >> /mnt/etc/fstab
-    SWAP_SETTINGS=$(grep swap /mnt/etc/crypttab | awk '{ print $5 }' | sed 's/,size=.*/,offset=2048,size=512/')
+    #SWAP_SETTINGS=$(grep swap /mnt/etc/crypttab | awk '{ print $5 }' | sed 's/,size=.*/,offset=2048,size=512/')
+    SWAP_SETTINGS="swap,offset=2048,cipher=aes-xts-plain64,size=512"
     echo "swap	LABEL=cryptswap	/dev/urandom $SWAP_SETTINGS" >> /mnt/etc/crypttab
 
     cp -r /install /mnt

@@ -27,8 +27,9 @@ configure()
 
 disable_recent()
 {
+    mkdir -p ~/.config/gtk-3.0/settings.ini
     cp configs/gtk3-settings.ini ~/.config/gtk-3.0/settings.ini
-    sed -i 's/StartupMode=.*$/StartupMode=cwd/' ~/.config/gtk-2.0/gtkfilechooser.ini
+    #sed -i 's/StartupMode=.*$/StartupMode=cwd/' ~/.config/gtk-2.0/gtkfilechooser.ini
     REC_USED_FILE=~/.local/share/recently-used.xbel
     rm -f $REC_USED_FILE
     touch $REC_USED_FILE
