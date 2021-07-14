@@ -144,6 +144,8 @@ setup_home()
     mkdir -p $HOME_DIR/workspace
     mkdir -p $HOME_DIR/mounts
     mkdir -p $HOME_DIR/downloads
+    mkdir -p /mnt/usb
+    mkdir -p /mnt/windows
 
     ln -s /mnt $HOME_DIR/mounts
     ln -s /run/media $HOME_DIR/mounts
