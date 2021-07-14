@@ -21,6 +21,8 @@ configure()
     xfconf-query -c xsettings -p /Net/ThemeName -s Adwaita-dark
     xfconf-query -c xfwm4 -p /general/workspace_count --set 1
     #xfconf-query -c xfce4-session -p /general/LockCommand -s "light-locker-command --lock" --create -t string
+    # Disable hibernation because of encrypted swap
+    xfconf-query -c xfce4-session -np /shutdown/ShowHibernate -t bool -s false
 }
 
 disable_recent()

@@ -20,12 +20,18 @@ set_mkinitcpio()
     mkinitcpio -P > /dev/null 2>&1
 }
 
-fix_flickering()
+setup_grub()
 {
     # https://wiki.archlinux.org/index.php/intel_graphics#Screen_flickering
-    UUID=$(lsblk -f | grep $LINUX_DEV | awk '{ print $5 }')
-    sed -i -E "s/(GRUB_CMDLINE_LINUX=\")/\1cryptdevice=UUID=$UUID:cryptroot root=\/dev\/mapper\/cryptroot i915.enable_psr=0/g" /etc/default/grub
-    grep "GRUB_CMDLINE_LINUX=" /etc/default/grub
+    # i915.enable_psr=0
+    UUID=$(blkid $LINUX_DEV --output value | head -n1)
+    sed -i -E "s/(GRUB_CMDLINE_LINUX_DEFAULT=\")/\1cryptdevice=UUID=$UUID:cryptroot root=\/dev\/mapper\/cryptroot /g" /etc/default/grub
+    grep "GRUB_CMDLINE_LINUX_DEFAULT=" /etc/default/grub
+    echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
+
+    # /dev/sda1 should already be mounted in /boot
+    grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot --recheck
+    grub-mkconfig -o /boot/grub/grub.cfg
 }
 
 basic_conf()
@@ -41,12 +47,9 @@ basic_conf()
     echo "arch" >> /etc/hostname
     echo "127.0.0.1			arch.localdomain		arch" >> /etc/hosts
 
-    #set_mkinitcpio
+    set_mkinitcpio
 
-    mount /dev/sda1 /boot
-    echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
-    grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot --recheck
-    grub-mkconfig -o /boot/grub/grub.cfg
+    setup_grub
 }
 
 add_user()
@@ -182,10 +185,10 @@ touch $LOG_FILE
 
 echo "Configuring the base system..."
 basic_conf >> $LOG_FILE 2>&1
-echo "Adding user $USER_NAME"
-add_user >> $LOG_FILE 2>&1
 echo "Installing packages. It may take some time..."
 packages_conf > $LOG_FILE 2>&1
+echo "Adding user $USER_NAME"
+add_user >> $LOG_FILE 2>&1
 
 # Uncomment if a specific kernel version is desired
 #echo "Installing specific kernel version..."
