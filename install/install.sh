@@ -191,9 +191,12 @@ copy_files()
     mkdir $HOME_DIR/postinstall
     mv install/configs $HOME_DIR/postinstall
     mv install/postinstall.sh $HOME_DIR/postinstall
+    mv install/install.cfg $HOME_DIR/postinstall
     
     chown -R $USER_NAME $HOME_DIR/install-logs
+    chgrp -R $USER_NAME $HOME_DIR/install-logs
     chown -R $USER_NAME $HOME_DIR/postinstall
+    chgrp -R $USER_NAME $HOME_DIR/postinstall
 }
 
 touch $LOG_FILE
