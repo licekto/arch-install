@@ -18,6 +18,7 @@ git
 git-filter-repo
 glances
 go
+gparted
 gpicview
 htop
 kolourpaint
@@ -57,6 +58,7 @@ ttf-liberation
 unrar
 usbutils
 valgrind
+veracrypt
 vim
 vlc
 wireshark-qt
